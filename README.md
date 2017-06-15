@@ -1,6 +1,6 @@
 # Circe field hints
 
-# Rationale
+## Rationale
 
 This module provides a configurable alternative to circe built-in type hinting strategy. As an example given the following ADT and data:
 
@@ -42,6 +42,12 @@ Using the `adt` function from this library instead it is possible to do the foll
 
     println(pinkyPet.asJson)
     // Relies on `petEncoder`, Produces: { "_type": "pet.cat", "breed": "Tabby", "weight": 6.5 }
+
+## Installation
+
+`circe-field-hints` is available on Bintray. This is the dependency for sbt:
+
+    "io.chumps" %% "circe-field-hints" % "0.1"
 
 ## The API
 

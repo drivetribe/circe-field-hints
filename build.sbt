@@ -14,6 +14,9 @@ lazy val circe = Seq(
 
 lazy val `circe-field-hints` = (project in file("."))
   .settings(
+    bintrayOrganization := Some("drivetribe"),
+    licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+    version in ThisBuild := "0.1",
     wartremoverErrors ++= Seq(Wart.TraversableOps, Wart.Return),
     organization in ThisBuild := "io.chumps",
     scalaVersion in ThisBuild := "2.11.11",
