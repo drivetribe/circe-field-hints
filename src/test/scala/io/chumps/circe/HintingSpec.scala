@@ -81,6 +81,12 @@ class HintingSpec extends FunSpec with Matchers {
       decode[Off.type](offJson) shouldEqual (Right(Off))
     }
 
+    it("support getting type hints for instances of case classes and case objects") {
+      HintedEncoder.hintFor(pinky) shouldEqual ("pet.cat")
+      HintedEncoder.hintFor(einstein) shouldEqual ("pet.dog")
+      HintedEncoder.hintFor(Off) shouldEqual ("status.off")
+    }
+
     it("raise an error if a type hint is invalid when decoding a case class") {
       decode[Cat](capibaraJson) shouldEqual (capibaraError)
       decode[Dog](capibaraJson) shouldEqual (capibaraError)
@@ -99,7 +105,7 @@ class HintingSpec extends FunSpec with Matchers {
   }
 
   describe("ADT hinted codecs") {
-    it ("introduce type hints when encoding a hinted sealed trait") {
+    it("introduce type hints when encoding a hinted sealed trait") {
       getHint(pinky.asInstanceOf[Pet].asJson) shouldEqual Right(catHint)
       getHint(einstein.asInstanceOf[Pet].asJson) shouldEqual Right(dogHint)
     }
@@ -109,6 +115,11 @@ class HintingSpec extends FunSpec with Matchers {
 
       decode[Pet](catJson) shouldEqual (Right(Cat("foobar", 123.45)))
       decode[Pet](dogJson) shouldEqual (Right(Dog("foobar", 123.45)))
+    }
+
+    it("support getting type hints for instances of a sealed trait") {
+      HintedEncoder.hintFor[Pet](pinky) shouldEqual ("pet.cat")
+      HintedEncoder.hintFor[Pet](einstein) shouldEqual ("pet.dog")
     }
 
     it("fail compiling when trying to define codecs for a sealed trait whose children are not defined") {
@@ -145,12 +156,12 @@ class HintingSpec extends FunSpec with Matchers {
     val ball = Ball(true)
 
     it("allow composing sealed codecs in coproduct codecs") {
-      decode[HHPT](laser.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](laser: Toy)))
-      decode[HHPT](ball.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](ball: Toy)))
-      decode[HHPT](pinky.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](pinky: Pet)))
-      decode[HHPT](einstein.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](einstein: Pet)))
-      decode[HHPT](kilgore.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](kilgore)))
-      decode[HHPT](House.asJson.noSpaces) shouldEqual(Right(Coproduct[HHPT](House)))
+      decode[HHPT](laser.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](laser: Toy)))
+      decode[HHPT](ball.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](ball: Toy)))
+      decode[HHPT](pinky.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](pinky: Pet)))
+      decode[HHPT](einstein.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](einstein: Pet)))
+      decode[HHPT](kilgore.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](kilgore)))
+      decode[HHPT](House.asJson.noSpaces) shouldEqual (Right(Coproduct[HHPT](House)))
     }
 
     it("raise an error if a type hint is invalid when decoding a case class") {
@@ -159,6 +170,22 @@ class HintingSpec extends FunSpec with Matchers {
 
     it("raise an error if a type hint is missing when decoding a case class") {
       decode[HHPT](noHintJson) shouldEqual (noHintError)
+    }
+
+    it("allow getting the hint of instances of composite coproduct codecs") {
+      HintedEncoder.hintFor(laser) shouldEqual ("toy.laser")
+      HintedEncoder.hintFor(ball) shouldEqual ("toy.ball")
+      HintedEncoder.hintFor(pinky) shouldEqual ("pet.cat")
+      HintedEncoder.hintFor(einstein) shouldEqual ("pet.dog")
+      HintedEncoder.hintFor(kilgore) shouldEqual ("human")
+      HintedEncoder.hintFor(House) shouldEqual ("house")
+
+      HintedEncoder.hintFor(Coproduct[HHPT](laser: Toy)) shouldEqual ("toy.laser")
+      HintedEncoder.hintFor(Coproduct[HHPT](ball: Toy)) shouldEqual ("toy.ball")
+      HintedEncoder.hintFor(Coproduct[HHPT](pinky: Pet)) shouldEqual ("pet.cat")
+      HintedEncoder.hintFor(Coproduct[HHPT](einstein: Pet)) shouldEqual ("pet.dog")
+      HintedEncoder.hintFor(Coproduct[HHPT](kilgore)) shouldEqual ("human")
+      HintedEncoder.hintFor(Coproduct[HHPT](House)) shouldEqual ("house")
     }
   }
 }

@@ -48,7 +48,7 @@ Using the `adt` function from this library instead it is possible to do the foll
 `circe-field-hints` is available on Bintray. This is the dependency for sbt:
 
     resolvers += Resolver.bintrayRepo("drivetribe", "maven")
-    libraryDependencies += "io.chumps" %% "circe-field-hints" % "0.1"
+    libraryDependencies += "io.chumps" %% "circe-field-hints" % "0.2"
 
 ## The API
 
@@ -66,3 +66,9 @@ The `HintedDecoder`, `HintedEncoder` and `HintedCodec` modules provide the same 
 * `coproduct` - defines a codec for a shapeless `Coproduct` whose types each have an implicitly available hinted codec; if any is missing it won't compile.
 
 For more examples of usage of these functions please refer to `HintingSpec`.
+
+It is also possible to access type hints for some value of a type for whose we have an `HintedEncoder` instance as follows:
+
+    // Both return the string "pet.cat"
+    HintedEncoder.hintFor(someCat)
+    HintedEncoder.hintFor(someCat: Pet)

@@ -32,7 +32,6 @@ object HintedDecoder {
         } yield decoded
       }
 
-
     def derive(hint: String)(
       implicit decoder: DerivedDecoder[Type],
       configuration: HintingConfiguration,

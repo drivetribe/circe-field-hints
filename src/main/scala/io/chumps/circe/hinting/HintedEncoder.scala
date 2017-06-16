@@ -6,20 +6,28 @@ import io.circe.generic.encoding.DerivedObjectEncoder
 import shapeless.{Coproduct, Generic, HList, Poly1}
 import shapeless.ops.coproduct.{Folder}
 
-trait HintedEncoder[T] extends Encoder[T]
+trait HintedEncoder[T] extends Encoder[T] {
+  def hintFor(t: T): String
+}
 
 object HintedEncoder {
-  private def apply[T](f: T => Json) = new HintedEncoder[T] {
+  private def apply[T](f: T => Json, h: T => String) = new HintedEncoder[T] {
     def apply(t: T): Json = f(t)
+    def hintFor(t: T): String = h(t)
   }
 
   def apply[T] = new Builder[T]
+
+  def hintFor[T](t: T)(implicit e: HintedEncoder[T]): String = e.hintFor(t)
 
   class Builder[Type] {
     def upgrade(hint: String, encoder: Encoder[Type])(
       implicit configuration: HintingConfiguration
     ): HintedEncoder[Type] =
-      HintedEncoder(t => encoder(t).deepMerge(Json.obj(configuration.hintFieldName -> Json.fromString(hint))))
+      HintedEncoder(
+        t => encoder(t).deepMerge(Json.obj(configuration.hintFieldName -> Json.fromString(hint))),
+        _ => hint
+      )
 
     def derive(hint: String)(
       implicit encoder: DerivedObjectEncoder[Type],
@@ -30,15 +38,29 @@ object HintedEncoder {
 
     def coproduct[CoproductType <: Coproduct](
       implicit isCoproduct: Type =:= CoproductType,
-      canApply: Folder.Aux[ToHintedJson.type, CoproductType, Json]
+      toHintedJson: Folder.Aux[ToHintedJson.type, CoproductType, Json],
+      hintFor: Folder.Aux[HintFor.type, CoproductType, String]
     ): HintedEncoder[Type] =
-      HintedEncoder((t: Type) => isCoproduct(t).fold(ToHintedJson))
+      HintedEncoder(
+        (t: Type) => isCoproduct(t).fold(ToHintedJson),
+        (t: Type) => isCoproduct(t).fold(HintFor)
+      )
 
     def adt[Repr <: Coproduct](
       implicit generic: Generic.Aux[Type, Repr],
-      canApply: Folder.Aux[ToHintedJson.type, Repr, Json]
-    ): HintedEncoder[Type] =
-      HintedEncoder((t: Type) => HintedEncoder[Repr].coproduct.apply(generic.to(t)))
+      canApply: Folder.Aux[ToHintedJson.type, Repr, Json],
+      hintFor: Folder.Aux[HintFor.type, Repr, String]
+    ): HintedEncoder[Type] = {
+      val coproductEncoder = HintedEncoder[Repr].coproduct
+      HintedEncoder(
+        (t: Type) => coproductEncoder.apply(generic.to(t)),
+        (t: Type) => coproductEncoder.hintFor(generic.to(t))
+      )
+    }
+  }
+
+  object HintFor extends Poly1 {
+    implicit def forHintedEncoder[T](implicit he: HintedEncoder[T]) = at[T](he.hintFor(_))
   }
 
   object ToHintedJson extends Poly1 {

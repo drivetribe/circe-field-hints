@@ -28,6 +28,7 @@ object HintedCodec {
       implicit configuration: HintingConfiguration,
       generic: Generic.Aux[Type, Repr],
       canEncode: Folder.Aux[HintedEncoder.ToHintedJson.type, Repr, Json],
+      hintFor: Folder.Aux[HintedEncoder.HintFor.type, Repr, String],
       toHList: ToHList.Aux[Repr, TypeList],
       decoders: LiftAll.Aux[HintedDecoder, TypeList, Decoders],
       decoderMapFolder: LeftFolder.Aux[
@@ -43,6 +44,7 @@ object HintedCodec {
       implicit configuration: HintingConfiguration,
       isCoproduct: Repr =:= Type,
       canEncode: Folder.Aux[HintedEncoder.ToHintedJson.type, Repr, Json],
+      hintFor: Folder.Aux[HintedEncoder.HintFor.type, Repr, String],
       toHList: ToHList.Aux[Repr, TypeList],
       decoders: LiftAll.Aux[HintedDecoder, TypeList, Decoders],
       decoderMapFolder: LeftFolder.Aux[
