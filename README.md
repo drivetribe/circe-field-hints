@@ -49,9 +49,6 @@ Using the `adt` function from this library instead it is possible to do the foll
 
 ## Installation
 
-`circe-field-hints` is available on Bintray. This is the dependency for sbt:
-
-    resolvers += Resolver.bintrayRepo("drivetribe", "maven")
     libraryDependencies += "com.drivetribe" %% "circe-field-hints" % "<latest version>"
 
 
