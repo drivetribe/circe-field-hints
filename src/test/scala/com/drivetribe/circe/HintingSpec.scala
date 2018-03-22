@@ -1,4 +1,4 @@
-package io.chumps.circe.hinting
+package com.drivetribe.circe.hinting
 
 import io.circe.{Decoder, DecodingFailure, Json}
 import io.circe.CursorOp.DownField

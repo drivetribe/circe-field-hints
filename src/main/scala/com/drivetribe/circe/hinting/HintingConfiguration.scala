@@ -1,4 +1,4 @@
-package io.chumps.circe.hinting
+package com.drivetribe.circe.hinting
 
 case class HintingConfiguration(hintFieldName: String)
 

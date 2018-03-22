@@ -1,4 +1,4 @@
-package io.chumps.circe.hinting
+package com.drivetribe.circe.hinting
 
 import cats.syntax.either._
 import io.circe._

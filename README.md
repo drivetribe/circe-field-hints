@@ -1,5 +1,8 @@
 # Circe field hints
 
+[![Latest version](https://index.scala-lang.org/drivetribe/circe-field-hints/circe-field-hints/latest.svg)](https://index.scala-lang.org/drivetribe/circe-field-hints/circe-field-hints)
+
+
 ## Rationale
 
 This module provides a configurable alternative to circe built-in type hinting strategy. As an example given the following ADT and data:
@@ -29,7 +32,7 @@ The built-in circe strategy to deriving a codec for `Pet` would work as follows:
 
 Using the `adt` function from this library instead it is possible to do the following:
 
-    import io.chumps.circe.hinting._
+    import com.drivetribe.circe.hinting._
     import io.circe.syntax._
 
     implicit val hintingConfiguration = HintingConfiguration.default
@@ -43,12 +46,14 @@ Using the `adt` function from this library instead it is possible to do the foll
     println(pinkyPet.asJson)
     // Relies on `petEncoder`, Produces: { "_type": "pet.cat", "breed": "Tabby", "weight": 6.5 }
 
+
 ## Installation
 
 `circe-field-hints` is available on Bintray. This is the dependency for sbt:
 
     resolvers += Resolver.bintrayRepo("drivetribe", "maven")
-    libraryDependencies += "io.chumps" %% "circe-field-hints" % "0.2"
+    libraryDependencies += "com.drivetribe" %% "circe-field-hints" % "<latest version>"
+
 
 ## The API
 
