@@ -1,4 +1,4 @@
-package io.chumps.circe.hinting
+package com.drivetribe.circe.hinting
 
 import io.circe.{Decoder, Encoder, Json}
 import io.circe.generic.decoding.DerivedDecoder
