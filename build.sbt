@@ -2,9 +2,9 @@ licenses += "MIT" -> url("http://opensource.org/licenses/MIT")
 version := "0.3"
 wartremoverErrors ++= Seq(Wart.TraversableOps, Wart.Return)
 organization := "com.drivetribe"
-homepage := Option(url("https://github.com/drivetribe/orchestra"))
+homepage := Option(url("https://github.com/drivetribe/circe-field-hints"))
 scmInfo := Option(
-  ScmInfo(url("https://github.com/drivetribe/orchestra"), "https://github.com/drivetribe/orchestra.git")
+  ScmInfo(url("https://github.com/drivetribe/circe-field-hints"), "https://github.com/drivetribe/circe-field-hints.git")
 )
 developers := List(
   Developer(id = "Astrac",
